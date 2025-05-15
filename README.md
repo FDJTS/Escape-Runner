@@ -22,6 +22,9 @@ Escape Runner is an exciting and fast-paced endless runner game where you contro
 
 ## Screenshots
 
+### Starting Game
+![Game Screenshot](./Screenshot 2025-05-15%174722.png)
+
 ### Gameplay
 ![Game Screenshot](./Screenshot%202025-05-15%20174722.png)
 
