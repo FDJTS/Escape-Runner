@@ -10,7 +10,7 @@ Escape Runner is an exciting and fast-paced endless runner game where you contro
 - Clean and minimalistic design  
 - Dark and Light mode support  
 - Login system (shows: Hello, [name])  
-- Contact form sends messages to: zyadmohamed343@gmail.com
+- Contact form sends messages to: fdjts1@gmail.com
 
 ## How to Play
 
