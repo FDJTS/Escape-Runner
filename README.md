@@ -1,7 +1,7 @@
 ```markdown
 # Escape Runner
 
-Escape Runner is an exciting and fast-paced endless runner game where you control a nimble green square trying to avoid oncoming obstacles. Use the arrow keys (Up and Down) to dodge the red barriers and rack up your score as you survive longer.
+**Escape Runner** is an exciting and fast-paced endless runner game where you control a nimble green square trying to avoid oncoming obstacles. Use the arrow keys (Up and Down) to dodge the red barriers and rack up your score as you survive longer.
 
 ## Features
 
@@ -22,13 +22,10 @@ Escape Runner is an exciting and fast-paced endless runner game where you contro
 
 ## Screenshots
 
-### Starting Game
-![Game Screenshot](./Screenshot 2025-05-15%174722.png)
-
-### Gameplay
+### Gameplay  
 ![Game Screenshot](./Screenshot%202025-05-15%20174722.png)
 
-### Game Over Message
+### Game Over Message  
 ![Game Over](./Screenshot%202025-05-15%20174807.png)
 
 ## Technologies Used
@@ -44,11 +41,11 @@ You can play the game directly here:
 
 Or run locally:
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/FDJTS/Escape-Runner.git
-   ```
-2. Open `index.html` in any modern web browser.
+```bash
+git clone https://github.com/FDJTS/Escape-Runner.git
+```
+
+Then open `index.html` in your browser.
 
 ## Future Enhancements
 
@@ -65,5 +62,5 @@ This project is open source and free to use under the MIT License.
 
 ---
 
-Enjoy the game and feel free to contribute!
+**Enjoy the game and feel free to contribute!**
 ```
