@@ -27,13 +27,16 @@ const player = {
     width: 50,
     height: 40,
     color: '#0f0',
-    speed: 122,
+    speed: 6,
     dy: 0,
 };
 
 const obstacles = [];
 const meteorRadius = 22;
-const obstacleSpeed = 4;
+let baseObstacleSpeed = 3; // سرعة البداية
+let obstacleSpeed = baseObstacleSpeed;
+let difficultyStep = 10; // كل كم نقطة تزيد الصعوبة
+let speedIncrement = 1.2; // مقدار زيادة السرعة
 
 function drawSpaceBackground() {
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
@@ -102,6 +105,11 @@ function updateObstacles() {
         obstacles.shift();
         score++;
         scoreEl.textContent = 'Score: ' + score;
+        // زيادة الصعوبة تدريجياً
+        if (score % difficultyStep === 0) {
+            obstacleSpeed *= speedIncrement;
+            if (obstacleSpeed > 18) obstacleSpeed = 18; // حد أقصى للسرعة
+        }
         if (score > highScore) {
             highScore = score;
             highScoreEl.textContent = 'High Score: ' + highScore;
@@ -225,6 +233,7 @@ function resetGame() {
     highScore = parseInt(localStorage.getItem("highScore_" + playerName)) || 0;
     highScoreEl.textContent = 'High Score: ' + highScore;
     gameOverScreen.classList.add("hidden");
+    obstacleSpeed = baseObstacleSpeed; // إعادة السرعة للبداية
 }
 
 function startGame() {
@@ -236,21 +245,6 @@ function startGame() {
     gameRunning = true;
     gameLoop();
 }
-
-function saveToGlobalScores(newEntry) {
-    let scores = JSON.parse(localStorage.getItem("globalScores")) || [];
-
-    scores = scores.filter(entry => entry.name !== newEntry.name);
-
-    scores.push(newEntry);
-
-    scores.sort((a, b) => b.score - a.score);
-
-    scores = scores.slice(0, 10);
-
-    localStorage.setItem("globalScores", JSON.stringify(scores));
-}
-
 
 function updateGlobalScores() {
     const scores = JSON.parse(localStorage.getItem("globalScores") || "[]");
