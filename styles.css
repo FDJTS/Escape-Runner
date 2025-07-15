@@ -53,7 +53,7 @@ button:hover {
     background-color: #0033aa;
 }
 
-input[type="text"] {
+input[type="text"], input[type="email"], input[type="password"] {
     padding: 10px 16px;
     border: none;
     border-radius: 6px;
@@ -133,6 +133,12 @@ input[type="text"] {
     background-color: #aa0000;
 }
 
+#loginMsg {
+    font-size: 1rem;
+    margin-top: 8px;
+    color: #ff4444;
+}
+
 @media (max-width: 600px) {
     #hud {
         font-size: 1rem;
@@ -142,7 +148,7 @@ input[type="text"] {
         font-size: 0.9rem;
         padding: 10px 18px;
     }
-    input[type="text"] {
+    input[type="text"], input[type="email"], input[type="password"] {
         width: 180px;
     }
 }
