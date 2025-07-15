@@ -1,4 +1,4 @@
-// Escape Runner - Complete JavaScript Game Logic
+// Spaceship Escape - Complete Game - 1.0
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const startBtn = document.getElementById("startGameBtn");
