@@ -62,7 +62,7 @@ Top 10 global scores are saved locally on your browser. They update automaticall
 
 ## 👨‍💻 Author
 
-Developed by **FDJTS** (Zyad Mohamed)
+Developed by **FDJTS**
 
 Enjoy playing Escape-Runner and feel free to customize or expand it further! 🚀
 
