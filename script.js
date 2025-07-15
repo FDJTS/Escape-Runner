@@ -33,7 +33,7 @@ const player = {
 
 const obstacles = [];
 const meteorRadius = 22;
-const obstacleSpeed = 7;
+const obstacleSpeed = 17;
 
 function drawSpaceBackground() {
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
