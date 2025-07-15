@@ -1,39 +1,73 @@
-# Escape Runner
+# Escape-Runner 🚀
 
-Escape Runner is an exciting and fast-paced endless runner game where you control a nimble green square trying to avoid oncoming obstacles. Use the arrow keys (Up and Down) to dodge the red barriers and rack up your score as you survive longer.
+Escape-Runner is a fully responsive and browser-based arcade game where the player controls a spaceship to dodge falling meteors in a deep space background. The game is designed to be lightweight, fast, and highly replayable with local and global score tracking.
 
-## Features
+---
 
-- Simple and intuitive controls using arrow keys  
-- Increasing challenge with randomly generated obstacles  
-- Score tracking  
-- Clean and minimalistic design  
-- Dark and Light mode support  
-- Login system (shows: Hello, [name])  
-- Contact form sends messages to: fdjts1@gmail.com
+## 🎮 Features
 
-## How to Play
+* ✨ Fullscreen canvas experience
+* 🌌 Animated deep-space starfield background
+* ☄️ Randomly spawning realistic meteors
+* 👤 Player name input with local persistence (cookies/localStorage)
+* 🧠 High score saving and global top 10 scoreboard
+* 🔁 Game over + restart flow
+* 🖥️ Responsive layout and optimized for desktop & mobile
+* 📩 Contact form sends messages to: [fdjts1@gmail.com](mailto:fdjts1@gmail.com)
+* ▶️ [Play Online](https://fdjts.github.io/Escape-Runner/)
 
-1. Click the Start Game button  
-2. Use the Up and Down arrow keys to move  
-3. Avoid the red obstacles  
-4. Try to get the highest score
+---
 
-## Screenshots
+## 🧩 Technologies Used
 
-![Gameplay](./Screenshot%202025-05-15%20174722.png)  
-![Game Over](./Screenshot%202025-05-15%20174807.png)
+* HTML5
+* CSS3 (Fully custom, no frameworks)
+* JavaScript (Vanilla ES6+)
 
-## Play Online
+---
 
-👉 [Play Escape Runner](https://fdjts.github.io/Escape-Runner)
+## 📁 File Structure
 
-## Technologies Used
+```
+Escape-Runner/
+├── index.html        # Main HTML file
+├── styles.css        # Custom CSS styles
+├── script.js         # Full game logic and functionality
+├── README.md         # Project documentation
+```
 
-- HTML5 Canvas  
-- CSS3  
-- JavaScript
+---
 
-## License
+## 🚀 Getting Started
 
-This project is open source and free to use.
+1. Clone the repository or download the ZIP
+2. Open `index.html` in your browser
+3. Enter your name and click "Start Game"
+4. Try to dodge the meteors and beat the high score!
+
+---
+
+## 📊 Global Scores
+
+Top 10 global scores are saved locally on your browser. They update automatically after each game.
+
+---
+
+## 📌 Notes
+
+* No internet connection is required — runs 100% offline
+* All player data is stored in your local browser storage (localStorage)
+
+---
+
+## 👨‍💻 Author
+
+Developed by **FDJTS** (Zyad Mohamed)
+
+Enjoy playing Escape-Runner and feel free to customize or expand it further! 🚀
+
+---
+
+## 📜 License
+
+Escape-Runner is open-source and available under the [MIT License](https://opensource.org/licenses/MIT).
