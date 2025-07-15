@@ -28,6 +28,7 @@ let score = 0;
 let highScore = 0;
 let gameRunning = false;
 let playerName = "";
+let paused = false;
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -346,6 +347,7 @@ player.draw = function() {
 };
 
 function gameLoop() {
+    if (paused) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     update();
     draw();
@@ -537,7 +539,18 @@ function startGame() {
 }
 
 document.addEventListener("keydown", (e) => {
-    if (!gameRunning) return;
+    if (e.key === "Escape") {
+        if (gameRunning) {
+            paused = !paused;
+            if (paused) {
+                cancelAnimationFrame(animationFrameId);
+            } else {
+                animationFrameId = requestAnimationFrame(gameLoop);
+            }
+        }
+        return;
+    }
+    if (!gameRunning || paused) return;
     if (e.key === "ArrowUp" || e.key === "w") {
         player.dy = -player.speed;
     } else if (e.key === "ArrowDown" || e.key === "s") {
@@ -546,7 +559,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 document.addEventListener("keyup", (e) => {
-    if (!gameRunning) return; // أضف هذا الشرط هنا أيضا
+    if (!gameRunning || paused) return;
     if (["ArrowUp", "ArrowDown", "w", "s"].includes(e.key)) {
         player.dy = 0;
     }
