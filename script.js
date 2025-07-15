@@ -27,7 +27,7 @@ const player = {
     width: 50,
     height: 40,
     color: '#0f0',
-    speed: 12,
+    speed: 122,
     dy: 0,
 };
 
