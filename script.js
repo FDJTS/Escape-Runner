@@ -237,6 +237,21 @@ function startGame() {
     gameLoop();
 }
 
+function saveToGlobalScores(newEntry) {
+    let scores = JSON.parse(localStorage.getItem("globalScores")) || [];
+
+    scores = scores.filter(entry => entry.name !== newEntry.name);
+
+    scores.push(newEntry);
+
+    scores.sort((a, b) => b.score - a.score);
+
+    scores = scores.slice(0, 10);
+
+    localStorage.setItem("globalScores", JSON.stringify(scores));
+}
+
+
 function updateGlobalScores() {
     const scores = JSON.parse(localStorage.getItem("globalScores") || "[]");
     scores.push({ name: playerName, score });
