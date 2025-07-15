@@ -1,19 +1,35 @@
-
+// Escape Runner - Complete Game - 1.0
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Escape-Runner</title>
-    <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Runner</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Escape-Runner</h1>
-    <div id="game-container">
-        <canvas id="gameCanvas" width="500" height="400"></canvas>
+    <div id="introScreen" class="overlay">
+        <h1>Escape Runner</h1>
+        <input type="text" id="playerNameInput" placeholder="Enter your name" />
+        <button id="startGameBtn">Start Game</button>
+        <div id="globalScores">
+            <h2>Global Scores</h2>
+            <ul id="scoreList"></ul>
+        </div>
     </div>
-    <div id="score">Score: 0</div>
-    <button id="startBtn">Start Game</button>
+
+    <div id="gameScreen" class="hidden">
+        <canvas id="gameCanvas"></canvas>
+        <div id="hud">
+            <div id="score">Score: 0</div>
+            <div id="highScore">High Score: 0</div>
+        </div>
+        <div id="gameOverScreen" class="overlay hidden">
+            <h1>Game Over</h1>
+            <div id="finalScore">Your Score: 0</div>
+            <button id="restartBtn">Play Again</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
