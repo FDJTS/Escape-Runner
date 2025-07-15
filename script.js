@@ -478,26 +478,34 @@ menuStartBtn.addEventListener("click", () => {
 });
 
 function updateGlobalScores() {
+    // حفظ الريكوردات في localStorage لكل لاعب بالإيميل وليس فقط بالاسم
     let scores = JSON.parse(localStorage.getItem("globalScores") || "[]");
+    let email = getLastLogin();
+    let players = getPlayers();
+    let player = players.find(p => p.email === email);
+    let currentName = player ? player.name : playerName;
+
     // تحديث سكور اللاعب إذا حقق نتيجة أعلى
     let found = false;
     for (let i = 0; i < scores.length; i++) {
-        if (scores[i].name === playerName) {
+        if (scores[i].email === email) {
             found = true;
             if (score > scores[i].score) scores[i].score = score;
+            scores[i].name = currentName; // تحديث الاسم إذا تغير
         }
     }
-    if (!found && score > 0) {
-        scores.push({ name: playerName, score });
+    if (!found && score > 0 && email) {
+        scores.push({ name: currentName, email: email, score });
     }
     scores.sort((a, b) => b.score - a.score);
-    // إزالة التكرار لنفس الاسم
+
+    // إزالة التكرار لنفس الإيميل (كل شخص له ريكورد واحد فقط)
     let uniqueScores = [];
-    let names = new Set();
+    let emails = new Set();
     for (let s of scores) {
-        if (!names.has(s.name)) {
+        if (!emails.has(s.email)) {
             uniqueScores.push(s);
-            names.add(s.name);
+            emails.add(s.email);
         }
     }
     const top10 = uniqueScores.slice(0, 10);
