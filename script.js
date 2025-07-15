@@ -1,3 +1,4 @@
+// Escape Runner - Complete JavaScript Game Logic
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const startBtn = document.getElementById("startGameBtn");
@@ -54,7 +55,7 @@ function drawSpaceBackground() {
 function drawMeteor(x, y, r) {
     ctx.save();
     ctx.translate(x, y);
-
+    // جسم النيزك بتدرج وظلال
     let grad = ctx.createRadialGradient(0, 0, r * 0.2, 0, 0, r);
     grad.addColorStop(0, "#fffbe0");
     grad.addColorStop(0.3, "#e6a14a");
@@ -67,7 +68,7 @@ function drawMeteor(x, y, r) {
     ctx.shadowBlur = 10;
     ctx.fill();
     ctx.shadowBlur = 0;
-
+    // حفر النيزك
     for (let i = 0; i < 5; i++) {
         ctx.save();
         let ang = Math.PI * 2 * i / 5;
@@ -143,8 +144,8 @@ function update() {
 player.draw = function() {
     ctx.save();
     ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
-    ctx.rotate(Math.PI / 2);
-
+    ctx.rotate(Math.PI / 2); // صاروخ بالعرض
+    // جسم الصاروخ
     ctx.beginPath();
     ctx.ellipse(0, 0, 14, 28, 0, 0, Math.PI * 2);
     ctx.fillStyle = "#eee";
@@ -152,7 +153,7 @@ player.draw = function() {
     ctx.shadowBlur = 10;
     ctx.fill();
     ctx.shadowBlur = 0;
-
+    // رأس الصاروخ
     ctx.beginPath();
     ctx.moveTo(0, -28);
     ctx.lineTo(-10, -10);
@@ -160,14 +161,14 @@ player.draw = function() {
     ctx.closePath();
     ctx.fillStyle = "#f00";
     ctx.fill();
-
+    // نافذة
     ctx.beginPath();
     ctx.arc(0, -10, 6, 0, Math.PI * 2);
     ctx.fillStyle = "#00eaff";
     ctx.globalAlpha = 0.8;
     ctx.fill();
     ctx.globalAlpha = 1;
-
+    // أجنحة جانبية
     ctx.fillStyle = "#ff9800";
     ctx.beginPath();
     ctx.moveTo(-14, 6);
@@ -181,7 +182,7 @@ player.draw = function() {
     ctx.lineTo(4, 14);
     ctx.closePath();
     ctx.fill();
-
+    // نار متحركة
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(0, 28);
