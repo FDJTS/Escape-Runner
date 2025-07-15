@@ -184,7 +184,9 @@ function createAsteroid() {
     let side = Math.random() < 0.5 ? 'top' : 'bottom';
     let x = canvas.width + Math.random() * 100;
     let y = side === 'top' ? 0 : canvas.height;
+    // إذا وصل اللاعب إلى مستوى 50 أو أكثر، الكويكبات تصبح أبطأ قليلاً
     let speed = asteroidBaseSpeed + Math.floor(score / asteroidDifficultyStep) * asteroidSpeedIncrement;
+    if (score >= 50) speed *= 0.7; // الكويكبات أبطأ بعد المستوى 50
     asteroids.push({
         x, y, r: asteroidRadius, angle: 0, speed
     });
@@ -563,4 +565,13 @@ document.addEventListener("keyup", (e) => {
     if (["ArrowUp", "ArrowDown", "w", "s"].includes(e.key)) {
         player.dy = 0;
     }
+});
+
+restartBtn.addEventListener("click", () => {
+    // إصلاح إعادة التشغيل بعد الجيم أوفر
+    gameOverScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
+    gameRunning = true;
+    resetGame();
+    animationFrameId = requestAnimationFrame(gameLoop);
 });
