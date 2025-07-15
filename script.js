@@ -1,117 +1,281 @@
-
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const startBtn = document.getElementById('startBtn');
-const scoreEl = document.getElementById('score');
+// Escape Runner - Complete JavaScript Game Logic
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const startBtn = document.getElementById("startGameBtn");
+const playerNameInput = document.getElementById("playerNameInput");
+const introScreen = document.getElementById("introScreen");
+const gameScreen = document.getElementById("gameScreen");
+const gameOverScreen = document.getElementById("gameOverScreen");
+const scoreEl = document.getElementById("score");
+const highScoreEl = document.getElementById("highScore");
+const finalScoreEl = document.getElementById("finalScore");
+const restartBtn = document.getElementById("restartBtn");
+const scoreList = document.getElementById("scoreList");
 
 let animationFrameId;
 let score = 0;
+let highScore = 0;
 let gameRunning = false;
+let playerName = "";
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 const player = {
-    x: 50,
+    x: 60,
     y: canvas.height / 2 - 25,
     width: 50,
-    height: 50,
+    height: 40,
     color: '#0f0',
-    speed: 5,
+    speed: 6,
     dy: 0,
 };
 
 const obstacles = [];
-const obstacleWidth = 20;
-const obstacleGap = 150;
-const obstacleSpeed = 3;
+const meteorRadius = 22;
+const obstacleSpeed = 4;
 
-document.addEventListener('keydown', (e) => {
-    if (!gameRunning) return;
-    if (e.key === 'ArrowUp') {
-        player.dy = -player.speed;
-    } else if (e.key === 'ArrowDown') {
-        player.dy = player.speed;
+function drawSpaceBackground() {
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, "#000011");
+    gradient.addColorStop(1, "#000000");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < 100; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const r = Math.random() * 1.5;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
     }
-});
-
-document.addEventListener('keyup', (e) => {
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        player.dy = 0;
-    }
-});
-
-function createObstacle() {
-    const y = Math.random() * (canvas.height - obstacleGap);
-    obstacles.push({ x: canvas.width, y: 0, width: obstacleWidth, height: y });
-    obstacles.push({ x: canvas.width, y: y + obstacleGap, width: obstacleWidth, height: canvas.height - (y + obstacleGap) });
 }
 
-function update() {
-    player.y += player.dy;
-    if (player.y < 0) player.y = 0;
-    if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
+function drawMeteor(x, y, r) {
+    ctx.save();
+    ctx.translate(x, y);
 
-    obstacles.forEach((obs) => {
-        obs.x -= obstacleSpeed;
+    let grad = ctx.createRadialGradient(0, 0, r * 0.2, 0, 0, r);
+    grad.addColorStop(0, "#fffbe0");
+    grad.addColorStop(0.3, "#e6a14a");
+    grad.addColorStop(0.7, "#a0522d");
+    grad.addColorStop(1, "#3e1f0f");
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.shadowColor = "#ffb300";
+    ctx.shadowBlur = 10;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    for (let i = 0; i < 5; i++) {
+        ctx.save();
+        let ang = Math.PI * 2 * i / 5;
+        ctx.rotate(ang);
+        ctx.beginPath();
+        ctx.arc(r * 0.6, 0, 6 + Math.random() * 3, 0, Math.PI * 2);
+        ctx.fillStyle = "#7a4b1a";
+        ctx.globalAlpha = 0.7;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.restore();
+    }
+    ctx.restore();
+}
+
+function createMeteor() {
+    const meteorY = Math.random() * (canvas.height - meteorRadius * 2) + meteorRadius;
+    obstacles.push({
+        type: 'meteor',
+        x: canvas.width + Math.random() * 200,
+        y: meteorY,
+        radius: meteorRadius
     });
+}
 
-    if (obstacles.length && obstacles[0].x + obstacleWidth < 0) {
-        obstacles.splice(0, 2);
+function updateObstacles() {
+    for (let obs of obstacles) {
+        obs.x -= obstacleSpeed;
+    }
+    while (obstacles.length && obstacles[0].x + (obstacles[0].radius * 2) < 0) {
+        obstacles.shift();
         score++;
         scoreEl.textContent = 'Score: ' + score;
+        if (score > highScore) {
+            highScore = score;
+            highScoreEl.textContent = 'High Score: ' + highScore;
+            localStorage.setItem("highScore_" + playerName, highScore);
+        }
     }
+    if (Math.random() < 0.02) createMeteor();
+}
 
-    if (obstacles.length === 0 || obstacles[obstacles.length - 1].x < canvas.width - 200) {
-        createObstacle();
-    }
-
+function checkCollisions() {
     for (let obs of obstacles) {
-        if (
-            player.x < obs.x + obs.width &&
-            player.x + player.width > obs.x &&
-            player.y < obs.y + obs.height &&
-            player.y + player.height > obs.y
-        ) {
-            gameOver();
+        let cx = obs.x, cy = obs.y, r = obs.radius;
+        let closestX = Math.max(player.x, Math.min(cx, player.x + player.width));
+        let closestY = Math.max(player.y, Math.min(cy, player.y + player.height));
+        let dx = cx - closestX;
+        let dy = cy - closestY;
+        if (dx * dx + dy * dy < r * r) {
+            endGame();
             break;
         }
     }
 }
 
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.width, player.height);
-
-    ctx.fillStyle = '#f00';
-    obstacles.forEach((obs) => {
-        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-    });
+    drawSpaceBackground();
+    player.draw();
+    for (let obs of obstacles) {
+        drawMeteor(obs.x, obs.y, obs.radius);
+    }
 }
 
-function loop() {
+function update() {
+    player.y += player.dy;
+    if (player.y < 0) player.y = 0;
+    if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
+    updateObstacles();
+    checkCollisions();
+}
+
+player.draw = function() {
+    ctx.save();
+    ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+    ctx.rotate(Math.PI / 2);
+
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 14, 28, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "#eee";
+    ctx.shadowColor = "#fff";
+    ctx.shadowBlur = 10;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.beginPath();
+    ctx.moveTo(0, -28);
+    ctx.lineTo(-10, -10);
+    ctx.lineTo(10, -10);
+    ctx.closePath();
+    ctx.fillStyle = "#f00";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(0, -10, 6, 0, Math.PI * 2);
+    ctx.fillStyle = "#00eaff";
+    ctx.globalAlpha = 0.8;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = "#ff9800";
+    ctx.beginPath();
+    ctx.moveTo(-14, 6);
+    ctx.lineTo(-28, 18);
+    ctx.lineTo(-4, 14);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(14, 6);
+    ctx.lineTo(28, 18);
+    ctx.lineTo(4, 14);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(0, 28);
+    ctx.lineTo(-7, 40 + Math.random() * 8);
+    ctx.lineTo(0, 36 + Math.random() * 8);
+    ctx.lineTo(7, 40 + Math.random() * 8);
+    ctx.closePath();
+    let fireGrad = ctx.createLinearGradient(0, 28, 0, 48);
+    fireGrad.addColorStop(0, "#fff");
+    fireGrad.addColorStop(0.5, "#ff0");
+    fireGrad.addColorStop(1, "#f80");
+    ctx.fillStyle = fireGrad;
+    ctx.globalAlpha = 0.7;
+    ctx.fill();
+    ctx.restore();
+    ctx.restore();
+};
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     update();
     draw();
-    animationFrameId = requestAnimationFrame(loop);
+    if (gameRunning) animationFrameId = requestAnimationFrame(gameLoop);
 }
 
-function gameOver() {
+function endGame() {
     cancelAnimationFrame(animationFrameId);
     gameRunning = false;
-    alert('Game Over! Your score: ' + score);
-    resetGame();
+    finalScoreEl.textContent = 'Your Score: ' + score;
+    gameOverScreen.classList.remove("hidden");
+    updateGlobalScores();
 }
 
 function resetGame() {
-    score = 0;
-    scoreEl.textContent = 'Score: ' + score;
     obstacles.length = 0;
     player.y = canvas.height / 2 - player.height / 2;
+    player.dy = 0;
+    score = 0;
+    scoreEl.textContent = 'Score: 0';
+    highScore = parseInt(localStorage.getItem("highScore_" + playerName)) || 0;
+    highScoreEl.textContent = 'High Score: ' + highScore;
+    gameOverScreen.classList.add("hidden");
 }
 
-startBtn.addEventListener('click', () => {
-    if (!gameRunning) {
-        gameRunning = true;
-        resetGame();
-        loop();
+function startGame() {
+    playerName = playerNameInput.value.trim() || "Player";
+    localStorage.setItem("playerName", playerName);
+    resetGame();
+    introScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
+    gameRunning = true;
+    gameLoop();
+}
+
+function updateGlobalScores() {
+    const scores = JSON.parse(localStorage.getItem("globalScores") || "[]");
+    scores.push({ name: playerName, score });
+    scores.sort((a, b) => b.score - a.score);
+    const top10 = scores.slice(0, 10);
+    localStorage.setItem("globalScores", JSON.stringify(top10));
+    scoreList.innerHTML = "";
+    top10.forEach(s => {
+        const li = document.createElement("li");
+        li.textContent = `${s.name}: ${s.score}`;
+        scoreList.appendChild(li);
+    });
+}
+
+window.onload = () => {
+    const savedName = localStorage.getItem("playerName");
+    if (savedName) playerNameInput.value = savedName;
+    updateGlobalScores();
+};
+
+startBtn.addEventListener("click", startGame);
+
+restartBtn.addEventListener("click", () => {
+    resetGame();
+    gameRunning = true;
+    gameLoop();
+});
+
+document.addEventListener("keydown", (e) => {
+    if (!gameRunning) return;
+    if (e.key === "ArrowUp" || e.key === "w") {
+        player.dy = -player.speed;
+    } else if (e.key === "ArrowDown" || e.key === "s") {
+        player.dy = player.speed;
+    }
+});
+
+document.addEventListener("keyup", (e) => {
+    if (["ArrowUp", "ArrowDown", "w", "s"].includes(e.key)) {
+        player.dy = 0;
     }
 });
