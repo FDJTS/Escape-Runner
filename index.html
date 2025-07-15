@@ -7,14 +7,26 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="introScreen" class="overlay">
+    <div id="mainMenu" class="overlay">
         <h1>Escape Runner</h1>
+        <button id="menuStartBtn">Start Game</button>
+        <button id="menuGlobalBtn">Global Records</button>
+    </div>
+
+    <div id="introScreen" class="overlay hidden">
+        <h2>Login or Create Account</h2>
         <input type="text" id="playerNameInput" placeholder="Enter your name" />
-        <button id="startGameBtn">Start Game</button>
-        <div id="globalScores">
-            <h2>Global Scores</h2>
-            <ul id="scoreList"></ul>
-        </div>
+        <input type="email" id="playerEmailInput" placeholder="Enter your email" />
+        <input type="password" id="playerPasswordInput" placeholder="Enter password" />
+        <button id="loginBtn">Login</button>
+        <button id="createAccountBtn">Create Account</button>
+        <div id="loginMsg" style="color:#ff4444; margin-top:10px;"></div>
+    </div>
+
+    <div id="globalScoresScreen" class="overlay hidden">
+        <h2>Global Records</h2>
+        <ul id="scoreList"></ul>
+        <button id="backToMenuBtn">Back</button>
     </div>
 
     <div id="gameScreen" class="hidden">
@@ -27,6 +39,7 @@
             <h1>Game Over</h1>
             <div id="finalScore">Your Score: 0</div>
             <button id="restartBtn">Play Again</button>
+            <button id="backToMenuGameOverBtn">Back to Main Menu</button>
         </div>
     </div>
 
