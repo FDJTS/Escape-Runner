@@ -180,16 +180,22 @@ function createMeteor() {
 }
 
 function createAsteroid() {
-    // يظهر الكويكب من جهة عشوائية ويتجه نحو اللاعب
+    // بعد المستوى 50: الكويكبات لا تتبع اللاعب بل تتحرك في اتجاه واحد فقط (أفقي)
     let side = Math.random() < 0.5 ? 'top' : 'bottom';
     let x = canvas.width + Math.random() * 100;
     let y = side === 'top' ? 0 : canvas.height;
-    // إذا وصل اللاعب إلى مستوى 50 أو أكثر، الكويكبات تصبح أبطأ قليلاً
     let speed = asteroidBaseSpeed + Math.floor(score / asteroidDifficultyStep) * asteroidSpeedIncrement;
-    if (score >= 50) speed *= 0.7; // الكويكبات أبطأ بعد المستوى 50
-    asteroids.push({
-        x, y, r: asteroidRadius, angle: 0, speed
-    });
+    // بعد المستوى 50: سرعة عشوائية والكويكب يتحرك أفقي فقط
+    if (score >= 50) {
+        speed = 5 + Math.random() * 8; // سرعة عشوائية بين 5 و 13
+        asteroids.push({
+            x, y, r: asteroidRadius, angle: 0, speed, fixedDirection: true, directionY: y === 0 ? 1 : -1
+        });
+    } else {
+        asteroids.push({
+            x, y, r: asteroidRadius, angle: 0, speed, fixedDirection: false
+        });
+    }
 }
 
 function updateObstacles() {
@@ -217,17 +223,23 @@ function updateObstacles() {
 function updateAsteroids() {
     if (asteroidActive && Math.random() < 0.03 + score / 1000) createAsteroid();
     for (let ast of asteroids) {
-        // تتبع اللاعب بدقة
-        let targetX = player.x + player.width / 2;
-        let targetY = player.y + player.height / 2;
-        let dx = targetX - ast.x;
-        let dy = targetY - ast.y;
-        let angle = Math.atan2(dy, dx);
-        ast.x += Math.cos(angle) * ast.speed;
-        ast.y += Math.sin(angle) * ast.speed;
-        ast.angle = angle;
-        // زيادة صعوبة الكويكبات تدريجياً
-        if (score > 100) ast.speed += 0.01;
+        if (ast.fixedDirection) {
+            // بعد المستوى 50: الكويكب يتحرك أفقي فقط مع انحراف بسيط لأعلى أو أسفل
+            ast.x -= ast.speed;
+            ast.y += ast.directionY * ast.speed * 0.15; // انحراف بسيط
+            ast.angle = 0;
+        } else {
+            // قبل المستوى 50: تتبع اللاعب بدقة
+            let targetX = player.x + player.width / 2;
+            let targetY = player.y + player.height / 2;
+            let dx = targetX - ast.x;
+            let dy = targetY - ast.y;
+            let angle = Math.atan2(dy, dx);
+            ast.x += Math.cos(angle) * ast.speed;
+            ast.y += Math.sin(angle) * ast.speed;
+            ast.angle = angle;
+            if (score > 100) ast.speed += 0.01;
+        }
     }
     // حذف الكويكبات الخارجة من الشاشة
     for (let i = asteroids.length - 1; i >= 0; i--) {
